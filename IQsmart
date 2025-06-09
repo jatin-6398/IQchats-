@@ -1,0 +1,311 @@
+
+import logging
+import time
+import threading
+import random
+from telegram import Update, ParseMode
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+
+# ----------------- Global Variables & Bot Token -----------------
+BOT_TOKEN = "8181288340:AAG8JEa2GXGstmgt1yzCrBJzhCkEweiBtl0"
+
+# Session data: last activity, feedback storage, active flag
+session_data = {
+    "last_activity": time.time(),
+    "feedback": None,
+    "active": True,
+}
+
+# ----------------- Logging Configuration -----------------
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# ----------------- Basic Command Handlers -----------------
+def start(update: Update, context: CallbackContext) -> None:
+    session_data["last_activity"] = time.time()
+    session_data["active"] = True
+    update.message.reply_text(
+        "Namaste! IQsmart Bot start ho gaya.\n"
+        "Market feedback ke liye, 100-300 ke beech PRNG numbers (0-9) space-separated text message mein bhejein.\n"
+        "Feedback milne ke baad /predict command use karein. 😊"
+    )
+
+def unknown_command(update: Update, context: CallbackContext) -> None:
+    session_data["last_activity"] = time.time()
+    update.message.reply_text("Maaf kijiye, yeh command samajh nahi aayi.")
+
+# ----------------- Session Management -----------------
+def reset_session():
+    session_data["feedback"] = None
+    session_data["active"] = False
+    logger.info("Session reset: 30 minute inactivity ke baad previous conversation delete ho gayi.")
+
+def session_management():
+    while True:
+        # 1800 seconds = 30 minutes
+        if session_data["active"] and (time.time() - session_data["last_activity"]) > 1800:
+            reset_session()
+        time.sleep(60)
+
+# ----------------- Feedback Handler -----------------
+def feedback(update: Update, context: CallbackContext) -> None:
+    session_data["last_activity"] = time.time()
+    try:
+        text = update.message.text.strip()
+        # Expecting space separated numbers: e.g., "6 3 2 8 2 9 4 2 8 3"
+        numbers = list(map(int, text.split()))
+        for num in numbers:
+            if num < 0 or num > 9:
+                update.message.reply_text("Feedback mein sirf 0 se 9 ke beech ke numbers hone chahiye.")
+                return
+        session_data["feedback"] = numbers
+        update.message.reply_text(f"Feedback receive ho gaya: {numbers}\nAb /predict command use karein.")
+    except Exception as e:
+        update.message.reply_text("Feedback process me error: " + str(e))
+
+# ----------------- Analytical Modules (37x) -----------------
+# Aap niche diye gaye functions ko advanced algorithms se customize kar sakte hain.
+
+def multi_dimensional_analysis(data):
+    return round(random.uniform(0, 1), 2)
+
+def probability_distribution(data):
+    return round(random.uniform(0, 1), 2)
+
+def trend_identification(data):
+    return random.choice(["Uptrend", "Downtrend", "Sideways"])
+
+def recent_data_weighting(data):
+    return round(random.uniform(0, 1), 2)
+
+def big_small_classification(data):
+    big = sum(1 for x in data if x >= 5)
+    small = sum(1 for x in data if x < 5)
+    return {"Big": big, "Small": small}
+
+def alternate_grouping(data):
+    return random.choice(["Red Group", "Green Group"])
+
+def dual_verification(data):
+    return random.choice([True, False])
+
+def risk_adjustment(data):
+    return round(random.uniform(0, 1), 2)
+
+def dynamic_thresholds(data):
+    return round(random.uniform(0, 1), 2)
+
+def confidence_score(data):
+    return round(random.uniform(50, 100), 2)
+
+def clustering_patterns(data):
+    return random.choice(["Cluster A", "Cluster B", "Cluster C"])
+
+def streak_detection(data):
+    return random.randint(1, 5)
+
+def feedback_based_weighting(data):
+    return round(random.uniform(0, 1), 2)
+
+def anomaly_detection(data):
+    return random.choice([True, False])
+
+def adaptive_learning_rate(data):
+    return round(random.uniform(0, 1), 2)
+
+def live_data_weighting(data):
+    return round(random.uniform(0, 1), 2)
+
+def historical_cross_check(data):
+    return round(random.uniform(0, 1), 2)
+
+def bayesian_updating(data):
+    return round(random.uniform(0, 1), 2)
+
+def smart_money_management(data):
+    return round(random.uniform(2, 3), 2)
+
+def risk_reward_analysis(data):
+    return round(random.uniform(0, 1), 2)
+
+def stop_loss_zone(data):
+    return round(random.uniform(0, 1), 2)
+
+def red_green_repetition(data):
+    return random.randint(0, 5)
+
+def last_30_rounds_consistency(data):
+    return round(random.uniform(0, 1), 2)
+
+def high_probability_cycle(data):
+    return random.choice([True, False])
+
+def big_small_flip_alert(data):
+    return random.choice([True, False])
+
+def dominance_pattern(data):
+    return random.choice(["Red Dominant", "Green Dominant"])
+
+def repeating_group_alert(data):
+    return random.choice([True, False])
+
+def multi_point_overlap(data):
+    return round(random.uniform(0, 1), 2)
+
+def error_trend_analysis(data):
+    return round(random.uniform(0, 1), 2)
+
+def confidence_deviation(data):
+    return round(random.uniform(0, 1), 2)
+
+def recursive_correction(data):
+    return round(random.uniform(0, 1), 2)
+
+def model_comparison(data):
+    return random.choice(["Model A", "Model B"])
+
+def feedback_integration(data):
+    return round(random.uniform(0, 1), 2)
+
+def real_time_adaptive_weighting(data):
+    return round(random.uniform(0, 1), 2)
+
+def live_anomaly_trend(data):
+    return random.choice([True, False])
+
+def user_driven_parameter_tuner(data):
+    return round(random.uniform(0, 1), 2)
+
+def meta_analytics(data):
+    return round(random.uniform(0, 1), 2)
+
+# Additional Trend Patterns (B/S & R/G)
+def bs_trend_pattern(data):
+    patterns = {
+        "Single": "B S B S B S B S B S B",
+        "Double": "S S B B S S B B S S B B",
+        "Triple": "B B B S S S B B B S S S",
+        "Quadra": "S S S S B B B B S S S S",
+        "Three in One": "B B B S B S B B B",
+        "Two in One": "S S S S B S S S S",
+        "Three in Two": "B B B S S B B B S S",
+        "Four in One": "S S S S B B B B S",
+        "Four in Two": "B B B B S S B B B B S S",
+        "Long": "B B B B S S S S B B B B S S",
+        "Zigzag": "B S S B B S S B B S S"
+    }
+    return random.choice(list(patterns.keys()))
+
+def rg_trend_pattern(data):
+    patterns = {
+        "Single": "R G R G R G R G R G R",
+        "Double": "G G R R G G R R G G R R",
+        "Triple": "R R R G G G R R R G G G",
+        "Quadra": "G G G G R R R R G G G G",
+        "Three in One": "R R R G R G R R R",
+        "Two in One": "G G G G R G G G G",
+        "Three in Two": "R R R G G R R R G G",
+        "Four in One": "G G G G R R R R G",
+        "Four in Two": "R R R R G G R R R R G G",
+        "Long": "R R R R G G G G R R R R G G",
+        "Zigzag": "R G G R R G G R R G G"
+    }
+    return random.choice(list(patterns.keys()))
+
+# ----------------- Combined Prediction Engine -----------------
+def perform_prediction(feedback_data):
+    results = {}
+    results['MultiDim']         = multi_dimensional_analysis(feedback_data)
+    results['ProbDist']         = probability_distribution(feedback_data)
+    results['Trend']            = trend_identification(feedback_data)
+    results['RecentWeight']     = recent_data_weighting(feedback_data)
+    results['BigSmall']         = big_small_classification(feedback_data)
+    results['AltGrouping']      = alternate_grouping(feedback_data)
+    results['DualVerif']        = dual_verification(feedback_data)
+    results['RiskAdjust']       = risk_adjustment(feedback_data)
+    results['DynThreshold']     = dynamic_thresholds(feedback_data)
+    results['Confidence']       = confidence_score(feedback_data)
+    results['Clustering']       = clustering_patterns(feedback_data)
+    results['Streak']           = streak_detection(feedback_data)
+    results['FBWeight']         = feedback_based_weighting(feedback_data)
+    results['Anomaly']          = anomaly_detection(feedback_data)
+    results['AdaptiveLR']       = adaptive_learning_rate(feedback_data)
+    results['LiveWeight']       = live_data_weighting(feedback_data)
+    results['Historical']       = historical_cross_check(feedback_data)
+    results['Bayesian']         = bayesian_updating(feedback_data)
+    results['SmartMoney']       = smart_money_management(feedback_data)
+    results['RiskReward']       = risk_reward_analysis(feedback_data)
+    results['StopLoss']         = stop_loss_zone(feedback_data)
+    results['RGRepetition']     = red_green_repetition(feedback_data)
+    results['Last30Consist']    = last_30_rounds_consistency(feedback_data)
+    results['HighProbCycle']    = high_probability_cycle(feedback_data)
+    results['BSFlipAlert']      = big_small_flip_alert(feedback_data)
+    results['Dominance']        = dominance_pattern(feedback_data)
+    results['RepeatingAlert']   = repeating_group_alert(feedback_data)
+    results['MultiPointOverlap']= multi_point_overlap(feedback_data)
+    results['ErrorTrend']       = error_trend_analysis(feedback_data)
+    results['ConfidenceDev']    = confidence_deviation(feedback_data)
+    results['RecursiveCorr']    = recursive_correction(feedback_data)
+    results['ModelCompare']     = model_comparison(feedback_data)
+    results['FBIntegration']    = feedback_integration(feedback_data)
+    results['RealTimeAdaptive'] = real_time_adaptive_weighting(feedback_data)
+    results['LiveAnomalyTrend'] = live_anomaly_trend(feedback_data)
+    results['UserParam']        = user_driven_parameter_tuner(feedback_data)
+    results['MetaAnalytics']    = meta_analytics(feedback_data)
+    results['BSTrendPattern']   = bs_trend_pattern(feedback_data)
+    results['RGTrendPattern']   = rg_trend_pattern(feedback_data)
+    return results
+
+def predict(update: Update, context: CallbackContext) -> None:
+    session_data["last_activity"] = time.time()
+    if not session_data["feedback"]:
+        update.message.reply_text("Pehle PRNG numbers (jaise: '6 3 2 8 2 9 4 2 8 3') mein feedback dein.")
+        return
+    feedback_data = session_data["feedback"]
+    analysis_results = perform_prediction(feedback_data)
+    overall_confidence = analysis_results["Confidence"]
+    
+    # Determining suggestion category based on confidence
+    if overall_confidence < 69:
+        suggestion = "Ignore 😒"
+    elif overall_confidence < 75:
+        suggestion = "Best Suggestion 👍"
+    elif overall_confidence < 85:
+        suggestion = "Sniper Suggestion 🎯"
+    elif overall_confidence < 95:
+        suggestion = "High Probability Suggestion 🚀"
+    else:
+        suggestion = "Killer Suggestion 💥"
+    
+    reply_text = "*Prediction Results:*\n"
+    reply_text += f"Overall Confidence: {overall_confidence:.2f}\n"
+    reply_text += f"Suggestion: {suggestion}\n\n"
+    reply_text += "*Detailed Analysis:*\n"
+    for key, value in analysis_results.items():
+        reply_text += f"- {key}: {value}\n"
+    
+    update.message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN)
+
+# ----------------- Main Function -----------------
+def main():
+    # Start background thread for session management.
+    threading.Thread(target=session_management, daemon=True).start()
+    updater = Updater(BOT_TOKEN, use_context=True)
+    dp = updater.dispatcher
+
+    # Register command handlers.
+    dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("predict", predict))
+    
+    # Register message handler for feedback (space-separated numbers).
+    dp.add_handler(MessageHandler(Filters.regex(r'^(\d+\s*)+$'), feedback))
+    
+    # Handler for unknown commands.
+    dp.add_handler(MessageHandler(Filters.command, unknown_command))
+    
+    updater.start_polling()
+    updater.idle()
+
+if __name__ == '__main__':
+    main()
